@@ -1,0 +1,33 @@
+---
+title: "Analysis of Exponential Distribution and Central Limit Theorem"
+author: "Kevin E. D'Elia"
+date: "January 25, 2016"
+output: html_document
+---
+
+File needs to be in PDF format.
+Verify that you can open it from the Coursera submission page.
+
+Does the title adequately summarize the analysis?
+
+# Synopsis of Analysis
+describe and summarize the data analysis in a few sentences (2-3)
+
+
+Need explanations of the simulations run, along with the accompanying R code
+
+The document compares the sample mean to the theoretical mean, including a figure (table or graph) with a relevant title.  The document shows where the distribution is centered, and compares it to the theoretical center of the distribution.
+
+The document compares the sample variance to the theoretical variance, including a figure (table or graph) with a relevant title.  The document shows the variability of the mean of 40 exponentials, and compares it to the theoretical variance /standard error of the distribution.
+
+The document describes in figures(s) and text how one can tell whether the distribution is normal.
+
+The document answers the question "Does the distribution of means of 40 exponentials behave as predicted by the Central Limit theorem?"
+
+The Report section before the Appendix is <= 3 pages
+The Appendix is 3 pages or fewer and separates the report from supporting code and figures
+
+Document has been proof read and spell-checked
+
+Coding statements do not extend beyond the right margin
+

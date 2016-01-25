@@ -1,0 +1,46 @@
+---
+title: "Guinea Pig Tooth Growth Analysis"
+author: "Kevin E. D'Elia"
+date: "January 25, 2016"
+output: html_document
+---
+
+File needs to be in PDF format.
+Verify that you can open it from the Coursera submission page.
+
+Does the title adequately summarize the analysis?
+
+# Synopsis of Analysis
+describe and summarize the data analysis in a few sentences (2-3)
+
+Use Headers
+
+# Header 1
+
+## Header 2
+
+### Header 3
+
+# Summary of the data
+provide a basic summary
+
+### ---- Next area of focus
+Document outlines key assumptions made about the analysis such as whether the variables are normally distributed, and how this affects the choice of statistical methods used for the analysis
+
+### --- Confidence intervals
+document uses confidence intervals and/or hypothesis tests to compare tooth growth by dose and supp (Delivery Method)
+
+##  -- Results
+Results of the confidence intervals / hypothesis tests are interpreted correctly, given the context of the problem.
+
+## -- Answers
+document provides an answer to the question, "Do Delivery methods and/or dosage affect tooth growth in guinea pigs?"
+
+The Report section before the Appendix is <= 3 pages
+The Appendix is 3 pages or fewer and separates the report from supporting code and figures
+
+Document has been proof read and spell-checked
+
+Coding statements do not extend beyond the right margin
+
+
