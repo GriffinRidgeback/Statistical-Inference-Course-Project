@@ -17,9 +17,7 @@ Use Headers
 
 # Header 1
 
-## Header 2
 
-### Header 3
 
 # Summary of the data
 provide a basic summary
