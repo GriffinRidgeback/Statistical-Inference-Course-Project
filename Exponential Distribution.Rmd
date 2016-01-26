@@ -31,3 +31,14 @@ Document has been proof read and spell-checked
 
 Coding statements do not extend beyond the right margin
 
+```{r}
+# Dummy values
+theMean = 2.1589
+theSd = 3.989388
+Statistic <- c("Mean", "Std. Deviation")
+Sample <- c(round(theMean, 2), round(theSd, 2))
+Theoretical <- c(5.0, 5.0)
+theTable <- data.frame(Statistic, Sample, Theoretical)
+rownames(theTable) <- NULL
+knitr::kable(theTable)
+```
