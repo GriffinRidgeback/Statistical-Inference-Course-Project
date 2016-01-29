@@ -31,3 +31,10 @@ Document has been proof read and spell-checked
 
 Coding statements do not extend beyond the right margin
 
+
+EXAMPLE:
+
+to generate 100 random # from an exponential distribution w/mu = 50
+vector <- rexp(100, 50)
+where 50 is the rate param and mean is 1/rate
+Use a histogram to plot this
