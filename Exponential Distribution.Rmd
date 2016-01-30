@@ -48,6 +48,9 @@ hist(mns)
 
 Do not forget to set your seed!!!
 
+Add this ->
+
+By The Central Limit Theorem, for large n, $\bar{X}$ ~ N($\mu$, $\sigma^2$/n)
 
 # Report Structure
 USE THIS AS YOUR STARTING POINT AND WORK THE REST IN!!
