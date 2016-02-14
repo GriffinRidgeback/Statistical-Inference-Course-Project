@@ -99,14 +99,16 @@ knitr::kable(theTable)
 ```
 
 Looking at this data graphically gives the following result:
-```{r sample_var_plots, echo=4:7}
+```{r sample_var_plots, echo=4:9}
 original_par <- par(no.readonly = TRUE)
 par(mfrow=c(1,2))
 title <- "40 Random Exponentials"
 hist(sample1, prob = TRUE, col = "yellow", xlim = c(0, 35), xlab = "", main = title)
 abline(v = var(sample1), col = "royalblue", lwd = 2)
+abline(v = sd(sample1), col = "green", lwd = 3)
 hist(sample2, prob = TRUE, col = "yellow", xlim = c(0, 35), xlab = "", main = title)
 abline(v = var(sample2), col = "royalblue", lwd = 2)
+abline(v = sd(sample2), col = "green", lwd = 3)
 par(original_par)
 ```
 
@@ -131,3 +133,7 @@ This distribution appears relatively normal and follows the pattern of the sampl
 By The Central Limit Theorem, for large n, $\bar{X}$ ~ N($\mu$, $\sigma^2$/n)
 
 The document answers the question "Does the distribution of means of 40 exponentials behave as predicted by the Central Limit theorem?"  From the analysis shown above, it can be stated that this is the case.
+
+In this analysis, the population is all numbers in an exponential distribution.  The sample size taken is 40 and the number of samples taken (which hopefully approximates the population) is 10,000.  The population mean is $\frac{1}{\lambda}$ as is the standard deviation.  In the case of this study, that amounts to 1/0.2 or 5.  It was shown that, for both the sample and the sampling distribution, the mean was very close to 5. In other words, the mean of the sampling distribution is roughly equivalent to the mean of the population.  It was also shown that the standard deviation of the samples approximated the standard deviation of the population.
+
+DO I HAVE TO SHOW THAT THE STANDARD DEVIATION OF THE SAMPLE MEANS (WHICH ARE THE SINGLE SAMPLES) EQUALS THE STANDARD DEVIATION OF THE POPULATION (5) DIVIDED BY THE SQUARE ROOT OF THE SAMPLE (40). SO FAR, I HAVE 5 = 0.8, WHICH IS NOT CORRECT
