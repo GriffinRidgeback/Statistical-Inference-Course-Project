@@ -119,6 +119,7 @@ Applying the same reasoning to the sampling distribution of the variance as was 
 x_label = "Variances of sample size 40"
 main_title = "Sampling Distribution"
 variances <- NULL
+n <- 1000
 ul <- 10000
 for (i in 1:ul) {variances <- c(variances, var(rexp(n, lambda) ) ) }
 hist(variances, prob = TRUE, xlab = x_label, main = main_title)
