@@ -75,7 +75,7 @@ Several comments are in order regarding the figures:
 Now, what happens when this drawing of a sample of size **n** and subsequent calculation of a sample statistic is done repeatedly?  The sample size remains the same, but the calculation is now done 10,000 times.  The following graphic shows the distribution of the sample means, or what is also known as the **sampling distribution**.
 
 ```{r sampling_distribution_of_means, echo=2:8}
-main.title <- "Sampling Distribution"
+main.title <- "Sampling Distribution of Means"
 xbar <- NULL
 ul <- 10000
 for (i in 1:ul) {xbar <- c(xbar, mean(rexp(n, lambda) ) ) }
@@ -88,8 +88,11 @@ From this graph, it can be seen that the distribution appears normal in shape.  
 
 # Sample Variance versus Theoretical Variance:  
 
-Next, the sample variance is evaluated on how well it estimates the variance of the population. The sample variance and standard deviation is computed for each sample and this is what the values look like:
-```{r table_of_variances, echo=FALSE}
+How well does the sample mean $\bar{x}$ estimate the hypothesized mean $\mu$?  To answer that, the sample variance and standard deviation for each sample is taken, and then the sampling distribution for the standard deviation is generated using 10000 experiments.
+
+For each of the two samples generated before, the variance and standard deviation are as follows:
+
+```{r table_of_stddevs, echo=FALSE}
 sample1_var <- var(sample1)
 sample1_sd <- sd(sample1)
 sample2_var <- var(sample2)
@@ -113,20 +116,32 @@ hist(sample2, prob = TRUE, col = "yellow", xlim = c(0, 35), xlab = "", main = ti
 abline(v = sd(sample2), col = "green", lwd = 3)
 ```
 
-It appears that, as the values in the tail increase, so does the variance.
+So most of the data lies within 1 standard deviation, or 5 units, from the mean, as expected.
 
-Applying the same reasoning to the sampling distribution of the variance as was done to the mean, the following graphic is the result:
-```{r sampling_distribution_of_variances, echo=3:8}
-x_label = "Variances of sample size 40"
+The same technique used to generate a sampling distribution of the mean is used to generate a sampling distribution of the standard deviation.  The resulting graph is shown below:
+```{r sampling_distribution_of_stddevs, echo=3:8}
+x_label = "Standard Deviations of sample size 40"
 main_title = "Sampling Distribution"
-variances <- NULL
+stddevs <- NULL
 ul <- 10000
-for (i in 1:ul) {variances <- c(variances, sd(rexp(n, lambda) ) ) }
-hist(variances, prob = TRUE, xlab = x_label, main = main_title, col = "coral")
-mtext(paste("Theoretical Standard Deviation = ", round(sd(variances), 3)), col = "orange")
+for (i in 1:ul) {stddevs <- c(stddevs, sd(rexp(n, lambda) ) ) }
+hist(stddevs, prob = TRUE, xlab = x_label, main = main_title, col = "coral")
+mtext(paste("Theoretical Standard Deviation = ", round(sd(stddevs), 3)), col = "orange")
 ```
 
-This distribution appears relatively normal and follows the pattern of the sample wherein, as the upper tail values increase and extend further from the center of the distribution, so does the variances.
+The resulting distribution appears relatively normal as predicted by the Central Limit Theorem. A further check is to calculate the **standard error of the mean**, also called the **standard deviation of the mean**, which estimates the standard deviation of a sampling distribution.  The SEM informs about the change in calculated means across a large number of experiments measuring the same quantity.  It estimates the variability between samples whereas the standard deviation measures the variability within a single sample.  Thus, if the effects of random changes are significant, then the standard error of the mean will be higher, and vice versa.  The formula for calculating the SEM is:
+
+$\qquad\sigma_M$ = $\frac{\sigma}{\sqrt{N}}$ where
+
+$\qquad\qquad\sigma_M$ is the standard error of the mean
+
+$\qquad\qquad\sigma$ is the standard deviation of the original distribution
+
+$\qquad\qquad$N is the sample size
+
+$\qquad\qquad\sqrt{N}$ is the square root of the sample size
+
+In this study, sd = 5, N = 40, put in the calculation here and show how, as the size increases, the SEM approaches the SD produced by the experiment
 
 # Distribution 
 
