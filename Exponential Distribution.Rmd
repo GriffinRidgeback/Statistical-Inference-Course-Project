@@ -70,6 +70,7 @@ hist(sample2, prob = TRUE, col = "navajowhite3", border = "black", xlab = "", ma
 abline(v = mean(sample2), col = "green", lwd = 2)
 qqnorm(sample2);qqline(sample2)
 par(original_par)
+rm(original_par)
 ```
 
 Several comments are in order regarding the figures:

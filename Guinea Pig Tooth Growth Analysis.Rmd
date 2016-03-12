@@ -34,7 +34,7 @@ Since the second variable is a _factor_, or _grouping_, variable, and the third 
 summary(ToothGrowth["len"])
 ```
 
-Other important descriptive statistics, which are absent from the base _summary()_ function, are __skew__ and __kurtosis__.  Skew is an indication of which way the data is skewed, positively or negatively, while kurtosis describes the curvature of the shape of the curve (more bell-shaped or less so).  While functions to provide these statistics are available in several R packages, such as __pastecs__ and __psych__, it is a relatively simple matter to write some R code which calculates these statistics.  First, though, it is good practice to handle possible missing data (NA values) in the dataset.
+Other important descriptive statistics, which are absent from the base _summary()_ function, are __skew__ and __kurtosis__.  Skew is an indication of which way the data is skewed, positively or negatively, while kurtosis describes the curvature of the shape of the distribution (more bell-shaped or less so).  While functions to provide these statistics are available in several R packages, such as __pastecs__ and __psych__, it is a relatively simple matter to write some R code which calculates these statistics.  First, though, it is good practice to handle possible missing data (NA values) in the dataset.
 ```{r check_for_NA}
 sum(is.na(ToothGrowth))
 ```
@@ -52,25 +52,25 @@ other.stats <- function(x) {
 }
 sapply(ToothGrowth["len"], other.stats)
 ```
-What do these statistics tell us about the data?  The mean is slightly lower than the mean, so that indicates a small left-skewing of the data.  The value for the skew is negative, which supports that assessment.  The kurtosis is also slightly negative, indicating a curve that is minimally flatter than a standard bell curve.
-```{r}
-require(graphics)
-coplot(len ~ dose | supp, data = ToothGrowth, panel = panel.smooth, xlab = "ToothGrowth data: length vs dose, given type of supplement")
-plot(ToothGrowth$len ~ ToothGrowth$dose)
-reg <- lm(ToothGrowth$len ~ ToothGrowth$dose)
-abline(reg)
-oldpar <- par(mfrow = c(2, 2), oma = c(0, 0, 2, 0) + 0.1)
+What do these statistics tell us about the data?  The mean is slightly lower than the median, so that indicates a small left-skewing of the data.  The value for the skew is negative, which supports that assessment.  The kurtosis is also slightly negative, indicating a curve that is minimally flatter than a standard bell curve, or relatively mesokurtic.
+
+Tabular descriptive statistics are useful but, as the saying goes, "A picture is worth a thousand words", which leads now to the use of graphical descriptive techniques.  The first of these is a histogram, shown here:
+
+```{r histogram, echo=2:3}
 growth <- ToothGrowth$len
-hist(growth)
-plot(density(growth), lwd = 1, main = "Kernel Density Estimation")
-rug(growth)
+
+hist(growth, prob = TRUE, col = "navajowhite3", border = "black", xlab = "")
+lines(density(growth), col="blue", lwd=2)
+
 qqnorm(growth)
 qqline(growth)
+
 boxplot(len ~ dose, data = ToothGrowth)
-mtext("Graphical Exploratory Data Analysis of Guinea Pig Tooth Growth Data", font = 4, outer = TRUE)
-par(oldpar)
-rm(oldpar)
+
+require(graphics)
+coplot(len ~ dose | supp, data = ToothGrowth, panel = panel.smooth, xlab = "ToothGrowth data: length vs dose, given type of supplement")
 ```
+Another useful plot is the Q-Q Plot, which relates quantiles in the given data to standard quantiles. Here is what such a plot looks like for the tooth growth data:
 
 ### ---- Next area of focus
 
