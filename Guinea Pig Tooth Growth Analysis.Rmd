@@ -1,19 +1,25 @@
 ---
-title: "Analysis of Guinea Pig Tooth Growth Using R"
+title: "Effects of Vitamin C doses on Guinea Pig Tooth Growth An analysis using R"
 author: "Kevin E. D'Elia"
 date: "March 5, 2016"
 output: pdf_document
 ---
 
 # Synopsis of Analysis
-In this paper, the techniques of Exploratory Data Analysis (EDA) will be applied to the dataset __ToothGrowth__.  Among those techniques are the use of tabular (_summary()_, _str()_) as well as graphical (_histogram()_, _boxplot()_) representations of the data in order to glean patterns and structure within the data.  The analysis will attempt to answer the following question:  Is the data in this dataset normally distributed and, by extension, if not, then why not?
+In this paper, the techniques of Exploratory Data Analysis (EDA) will be applied to the dataset __ToothGrowth__.  Among those techniques are the use of tabular (_summary()_, _str()_) as well as graphical (_histogram()_, _boxplot()_) representations of the data in order to glean patterns and structure within the data.  The analysis will attempt to answer the following question:  Is the data in this dataset normally distributed and, by extension, if not, then why not? 
 
 # Summary of the data
 Usually the first step in any analysis is to acquire and load the data.  In this case, however, the dataset is preloaded in __R__ and is available via the __datasets__ package.  So, simply typing __ToothGrowth__ at the console prompt will display the full dataset.  The first few lines look like this:
 ```{r display_head}
 head(ToothGrowth)
 ```
-A bit of background on this dataset:  from the R documentation - _The response is the length of odontoblasts (cells responsible for tooth growth) in 60 guinea pigs. Each animal received one of three dose levels of vitamin C (0.5, 1, and 2 mg/day) by one of two delivery methods, (orange juice or ascorbic acid (a form of vitamin C and coded as VC)._
+A bit of background on this dataset:  from the R documentation - 
+```
+The response is the length of odontoblasts (cells responsible for tooth growth) 
+in 60 guinea pigs. Each animal received one of three dose levels of vitamin C 
+(0.5, 1, and 2 mg/day) by one of two delivery methods, (orange juice or ascorbic acid 
+(a form of vitamin C and coded as VC).
+```
 
 The structure of this dataset, as described by the documentation, is displayed using the following R command:
 ```{r structure}
@@ -21,15 +27,21 @@ str(ToothGrowth)
 ```
 
 This table confirms that the dataset consists of 60 observations of 3 variables.  Again, from the R documentation: 
-_A data frame with 60 observations on 3 variables._
+```
+A data frame with 60 observations on 3 variables.
 
-_[,1]	 len	 numeric	 Tooth length_
+[,1]	 len	 numeric	 Tooth length
 
-_[,2]	 supp	 factor	 Supplement type (VC or OJ)._
+[,2]	 supp	 factor	 Supplement type (VC or OJ).
 
-_[,3]	 dose	 numeric	 Dose in milligrams/day_
+[,3]	 dose	 numeric	 Dose in milligrams/day
+```
 
-Since the second variable is a _factor_, or _grouping_, variable, and the third variable has values in a fixed range from 0.5:2 (and thus not very interesting from an analytical perspective), the next step in the analysis will exclude those two columns and look only at changes in tooth length.  To see a basic summary of the measures of central tendency for the ToothGrowth growth length variable, use the eponymous R command:
+Since the second variable is a _factor_, or _grouping_, variable, and the third variable has values in a fixed range from 0.5:2 (and thus not very interesting from an analytical perspective), the next step in the analysis will exclude those two columns and look only at changes in tooth length.
+
+# Exploratory Data Analysis
+
+To see a basic summary of the measures of central tendency for the ToothGrowth growth length variable, use the eponymous R command:
 ```{r summarize}
 summary(ToothGrowth["len"])
 ```
@@ -43,9 +55,7 @@ The _is.na()_ function returns a logical vector which is numerically represented
 
 ```{r skew_and_kurtosis}
 other.stats <- function(x) {
-  m <- mean(x)
-  n <- length(x)
-  s <- sd(x)
+  m <- mean(x);  n <- length(x);  s <- sd(x)
   skew <- round(sum( (x - m)^3 / s^3 ) / n, 3)
   kurtosis <- round(sum( (x - m)^4 / s^4 ) / n - 3, 3)
   return(c(skew=skew, kurtosis=kurtosis))
@@ -54,41 +64,76 @@ sapply(ToothGrowth["len"], other.stats)
 ```
 What do these statistics tell us about the data?  The mean is slightly lower than the median, so that indicates a small left-skewing of the data.  The value for the skew is negative, which supports that assessment.  The kurtosis is also slightly negative, indicating a curve that is minimally flatter than a standard bell curve, or relatively mesokurtic.
 
-Tabular descriptive statistics are useful but, as the saying goes, "A picture is worth a thousand words", which leads now to the use of graphical descriptive techniques.  The first of these is a histogram, shown here:
+Tabular descriptive statistics are useful but, as the saying goes, "A picture is worth a thousand words", which leads now to the use of graphical descriptive techniques.  Two of the more useful ones are __histograms__, which show either frequencies or probability densities, and __Q-Q plots__, which relate quantiles in the given data to standard quantiles:
 
-```{r histogram, echo=2:3}
+```{r distribution_graphs, echo=4:8}
+original_par <- par(no.readonly = TRUE)
+par(mfrow=c(2,2))
 growth <- ToothGrowth$len
-
 hist(growth, prob = TRUE, col = "navajowhite3", border = "black", xlab = "")
+abline(v = mean(growth), col = "green", lwd = 2)
 lines(density(growth), col="blue", lwd=2)
-
-qqnorm(growth)
-qqline(growth)
-
-boxplot(len ~ dose, data = ToothGrowth)
-
-require(graphics)
-coplot(len ~ dose | supp, data = ToothGrowth, panel = panel.smooth, xlab = "ToothGrowth data: length vs dose, given type of supplement")
+qqnorm(growth);qqline(growth)
+par(original_par)
+rm(original_par)
 ```
-Another useful plot is the Q-Q Plot, which relates quantiles in the given data to standard quantiles. Here is what such a plot looks like for the tooth growth data:
 
-### ---- Next area of focus
+While the previous graphs are used in determining the normalcy of the data, other types of graphs are useful for displaying correlative information.  A __coplot__ (see _Appendix_) is one of a number of graphical functions that relates numerical data, such as the growth length in this case, to one or more grouping factor variables.  Another popular choice is the __boxplot__ (see _Appendix_), also known as a _tails_ _and_ _whiskers_ plot.
 
-1. There are no outliers
+# Observations on EDA artefacts
 
-Document outlines key assumptions made about the analysis such as whether the variables are normally distributed, and how this affects the choice of statistical methods used for the analysis
+From an analysis of the graphs produced, the following observations can be made:
 
-### --- Confidence intervals
-document uses confidence intervals and/or hypothesis tests to compare tooth growth by dose and supp (Delivery Method)
+* Density curve on the histogram indicates a non-normal distribution; this is supported by the Q-Q plot.
 
-##  -- Results
-Results of the confidence intervals / hypothesis tests are interpreted correctly, given the context of the problem.
+* Data falls off sharply on both ends of the histogram.
 
-## -- Answers
-document provides an answer to the question, "Do Delivery methods and/or dosage affect tooth growth in guinea pigs?"
+* Skewing is slight due to fairly even distribution of data points in the 5-30 measurement range.
 
+* The density curve, while not normal, is still relatively mesokurtic.
 
-    Exploratory Data Analysis -- includes at least one chart of the types that we learned in the Exploratory Data Analysis class, along with some commentary explaining the distribution / basic features of the data in the study
-    Key Assumptions -- explains key assumptions made for the hypothesis tests
-    Hypothesis Tests -- using techniques learned in this class, analyze the data
-    Conclusions -- given your hypothesis tests, explain how Vitamin C is related to tooth growth in guinea pigs
+* There is a single outlier evident on the boxplot.
+
+* The data appears most symmetric for the 2 milligrams/day dosage of the ascorbic acid (VC) supplement.
+ 
+# Confidence intervals
+
+Now that an estimate of the population mean has been calculated, how can its accuracy be quantified? Note that the variance for the population is unknown.  The technique employed evaluates the margin of error and an interval estimate at the 95% confidence level.  First, calculate the margin of error:
+```{r margin_of_error}
+n <- length(growth)
+s <- sd(growth)
+SE <- s/sqrt(n); SE
+E <- qt(.975, n-1) * SE; round(E, 3)
+```
+
+Next, using the margin of error, calculate the confidence interval:
+```{r confidence}
+x_bar <- mean(growth)
+round(x_bar + c(-E, E), 3)
+```
+
+Another approach to obtaining the confidence interval is by using the R function _t.test()_ and examining the confidence interval (__conf.int__) parameter.  One assumption for using __t.test()__ is that the population from which the sample has been drawn should be normal, but minor departures from normality do not affect this test.  This assumption is true for the tooth growth length data. 
+
+```{r t_test}
+round(t.test(growth)$conf.int, 3)
+```
+
+# Conclusions
+From the results of the exploratory and data analysis, the following conclusions can be drawn:
+
+1. The distribution of growth length in odontoblasts is not nearly a normal distribution.
+2. Without knowing the population standard deviation, the margin of error for tooth growth at a 95% confidence interval is __`r round(E, 3)`__ microns.  The true mean has a 95% chance of being in the interval between __`r round(x_bar + c(-E, E), 3)`__ microns.
+3. There is a linear relationship between the amount of the respective dosages and the affects on tooth growth, irrespective of supplement type.
+4. Ascorbic acid has the most effect on tooth growth at the highest dosage level; otherwise, Orange Juice provides a greater change overall.
+
+# Appendix
+```{r coplot, echo=FALSE}
+require(graphics)
+x_label <- "ToothGrowth data: length vs. dose, given type of supplement"
+coplot(len ~ dose | supp, data = ToothGrowth, panel = panel.smooth, xlab = x_label, rows = 1)
+```
+
+```{r boxplot, echo=FALSE}
+title <- "Tooth Growth"; x_label <- "Supplement and Dose"
+boxplot(len~supp*dose, data=ToothGrowth, col=(c("lightblue","orange")), main=title, xlab=x_label) 
+```
