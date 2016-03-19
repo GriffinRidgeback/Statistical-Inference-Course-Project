@@ -2,7 +2,7 @@
 title: "Effects of Vitamin C doses on Guinea Pig Tooth Growth An analysis using R"
 author: "Kevin E. D'Elia"
 date: "March 5, 2016"
-output: pdf_document
+output: html_document
 ---
 
 # Synopsis of Analysis
