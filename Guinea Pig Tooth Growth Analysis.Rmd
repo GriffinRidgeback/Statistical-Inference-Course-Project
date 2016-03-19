@@ -2,7 +2,7 @@
 title: "Effects of Vitamin C doses on Guinea Pig Tooth Growth An analysis using R"
 author: "Kevin E. D'Elia"
 date: "March 5, 2016"
-output: html_document
+output: pdf_document
 ---
 
 # Synopsis of Analysis
@@ -13,38 +13,24 @@ Usually the first step in any analysis is to acquire and load the data.  In this
 ```{r display_head}
 head(ToothGrowth)
 ```
-A bit of background on this dataset:  from the R documentation - 
-```
-The response is the length of odontoblasts (cells responsible for tooth growth) 
-in 60 guinea pigs. Each animal received one of three dose levels of vitamin C 
-(0.5, 1, and 2 mg/day) by one of two delivery methods, (orange juice or ascorbic acid 
-(a form of vitamin C and coded as VC).
-```
+A bit of background on this dataset: __len__ is the length of odontoblasts (cells responsible for tooth growth) in 60 guinea pigs. Each animal received one of three __dose__ levels of vitamin C (0.5, 1, and 2 mg/day) by one of two delivery methods __supp__:  orange juice or ascorbic acid (a form of vitamin C and coded as VC).
 
-The structure of this dataset, as described by the documentation, is displayed using the following R command:
+The structure of this dataset is displayed using the following R command:
 ```{r structure}
 str(ToothGrowth)
 ```
 
-This table confirms that the dataset consists of 60 observations of 3 variables.  Again, from the R documentation: 
-```
-A data frame with 60 observations on 3 variables.
-
-[,1]	 len	 numeric	 Tooth length
-
-[,2]	 supp	 factor	 Supplement type (VC or OJ).
-
-[,3]	 dose	 numeric	 Dose in milligrams/day
-```
-
-Since the second variable is a _factor_, or _grouping_, variable, and the third variable has values in a fixed range from 0.5:2 (and thus not very interesting from an analytical perspective), the next step in the analysis will exclude those two columns and look only at changes in tooth length.
+This table indicates that the dataset consists of 60 observations of 3 variables. Since the second variable is a _factor_, or _grouping_, variable, and the third variable has values in a fixed range from 0.5:2 (and thus not very interesting from an analytical perspective), the next step in the analysis will exclude those two columns and look only at changes in tooth length.
 
 # Exploratory Data Analysis
 
-To see a basic summary of the measures of central tendency for the ToothGrowth growth length variable, use the eponymous R command:
-```{r summarize}
-summary(ToothGrowth["len"])
+To see a basic summary of the measures of central tendency for the ToothGrowth growth length variable, use the following __dplyr__ command:
+```{r summarize, echo=2}
+suppressMessages(library(dplyr))
+ToothGrowth %>% group_by(supp, dose) %>% summarise_each(funs(mean))
 ```
+
+A quick analysis of this table hints that, at the two lower doses, Orange Juice results in greater tooth growth and that the results are equivalent for both supplements at the 2.0 mg/day dosage.
 
 Other important descriptive statistics, which are absent from the base _summary()_ function, are __skew__ and __kurtosis__.  Skew is an indication of which way the data is skewed, positively or negatively, while kurtosis describes the curvature of the shape of the distribution (more bell-shaped or less so).  While functions to provide these statistics are available in several R packages, such as __pastecs__ and __psych__, it is a relatively simple matter to write some R code which calculates these statistics.  First, though, it is good practice to handle possible missing data (NA values) in the dataset.
 ```{r check_for_NA}
@@ -66,7 +52,7 @@ What do these statistics tell us about the data?  The mean is slightly lower tha
 
 Tabular descriptive statistics are useful but, as the saying goes, "A picture is worth a thousand words", which leads now to the use of graphical descriptive techniques.  Two of the more useful ones are __histograms__, which show either frequencies or probability densities, and __Q-Q plots__, which relate quantiles in the given data to standard quantiles:
 
-```{r distribution_graphs, echo=4:8}
+```{r distribution_graphs, echo=3:8}
 original_par <- par(no.readonly = TRUE)
 par(mfrow=c(2,2))
 growth <- ToothGrowth$len
@@ -78,7 +64,7 @@ par(original_par)
 rm(original_par)
 ```
 
-While the previous graphs are used in determining the normalcy of the data, other types of graphs are useful for displaying correlative information.  A __coplot__ (see _Appendix_) is one of a number of graphical functions that relates numerical data, such as the growth length in this case, to one or more grouping factor variables.  Another popular choice is the __boxplot__ (see _Appendix_), also known as a _box-and-whiskers_ plot.
+While the previous graphs are used in determining the normalcy of the data, other types of graphs are useful for displaying correlative information. One such popular choice is the __boxplot__ (see _Appendix_), also known as a _box-and-whiskers_ plot.
 
 # Observations on EDA artifacts
 
@@ -96,41 +82,50 @@ From an analysis of the graphs produced, the following observations can be made:
 
 * Ascorbic acid in the 1.0 and 2.0 mg/day dosages exhibit the most symmetry.
  
-# Confidence intervals
+# Hypothesis Testing and Confidence intervals
 
-Now that an estimate of the population mean has been calculated, how can its accuracy be quantified? Note that the variance for the population is unknown.  The technique employed evaluates the margin of error and an interval estimate at the 95% confidence level.  First, calculate the margin of error:
-```{r margin_of_error}
-n <- length(growth); s <- sd(growth)
-SE <- s/sqrt(n); SE
-E <- qt(.975, n-1) * SE; round(E, 3)
+There are numerous hypotheses that can be developed from this dataset.  This report will test Orange Juice versus Ascorbic Acid by Dose.
+
+$H_0$: Tooth growth is the same for both delivery methods at the given dosage of Vitamin C
+
+$H_a$: Tooth growth is probably impacted by the delivery method at the given dosage of Vitamin C
+
+### For the 0.5 Dosage
+```{r dose_0.5}
+dose.0.5 <- t.test(len~supp,data=ToothGrowth[ToothGrowth$dose == 0.5, ], paired = F, var.equal = F)
+dose.0.5$conf.int
+dose.0.5$p.value
 ```
+Since the p-value is very much less than 0.05, $H_0$ is rejected at the 95% significance level. This indicates evidence that orange juice has a measurable impact on guinea pig tooth growth for a 0.5 mg dosage.
 
-Next, using the margin of error, calculate the confidence interval:
-```{r confidence}
-x_bar <- mean(growth)
-round(x_bar + c(-E, E), 3)
+### For the 1.0 Dosage
+```{r dose_1.0}
+dose.1.0 <- t.test(len~supp,data=ToothGrowth[ToothGrowth$dose == 1.0, ], paired = F, var.equal = F)
+dose.1.0$conf.int
+dose.1.0$p.value
 ```
+This t.test gives the same result as for the 0.5 one.
 
-Another approach to obtaining the confidence interval is by using the R function _t.test()_ and examining the confidence interval (__conf.int__) parameter.  One assumption for using __t.test()__ is that the population from which the sample has been drawn should be normal, but minor departures from normality do not affect this test.  This assumption is true for the tooth growth length data. 
-
-```{r t_test}
-round(t.test(growth)$conf.int, 3)
+### For the 2.0 Dosage
+```{r dose_2.0}
+dose.2.0 <- t.test(len~supp,data=ToothGrowth[ToothGrowth$dose == 2.0, ], paired = F, var.equal = F)
+dose.2.0$conf.int
+dose.2.0$p.value
 ```
+Since the p-value is very close to 1.0, $H_0$ is __not__ rejected at the 95% significance level. This indicates evidence that orange juice has no significant impact on guinea pig tooth growth for a 2.0 mg dosage.
+
+# Assumptions
+* The distribution of growth length in odontoblasts is not nearly a normal distribution.  An explanation as to why this is so comes from the low contribution to growth rate from the 1.0 mg/day ascorbic acid supplement.  This component of the data also contains the lone outlier.
+* Guinea Pigs are similar as a population and this is a random population of Guinea Pigs.
 
 # Conclusions
 From the results of the exploratory and data analysis, the following conclusions can be drawn:
 
-* The distribution of growth length in odontoblasts is not nearly a normal distribution.  An explanation as to why this is so comes from the low contribution to growth rate from the 1.0 mg/day ascorbic acid supplement.  This component of the data also contains the lone outlier.
-* Without knowing the population standard deviation, the margin of error for tooth growth at a 95% confidence interval is __`r round(E, 3)`__ microns.  The true mean has a 95% chance of being in the interval between __`r round(x_bar + c(-E, E), 3)`__ microns.
 * There is a linear relationship between the amount of the respective dosages and the affects on tooth growth, irrespective of supplement type.
+
 * Ascorbic acid has the most effect on tooth growth at the highest dosage level. Orange juice provides a greater change at the 0.5 and 1.0 mg/day dosage levels.
 
 # Appendix
-```{r coplot, echo=FALSE}
-require(graphics)
-x_label <- "ToothGrowth data: length vs. dose, given type of supplement"
-coplot(len ~ dose | supp, data = ToothGrowth, panel = panel.smooth, xlab = x_label, rows = 1)
-```
 
 ```{r boxplot, echo=FALSE}
 title <- "Tooth Growth"; x_label <- "Supplement and Dose"
