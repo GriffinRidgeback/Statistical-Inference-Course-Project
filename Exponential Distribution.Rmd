@@ -2,7 +2,7 @@
 title: "An Application of the Central Limit Theorem to the Exponential Distribution"
 author: "Kevin E. D'Elia"
 date: "March 5, 2016"
-output: pdf_document
+output: html_document
 ---
 
 ```{r global_options, include=FALSE}
@@ -56,7 +56,7 @@ mean(xbar)
 So, it appears that the sample mean is indeed very close to the value predicted by the theory.  Graphically, this can be shown as:
 ```{r histogram}
 main.title <- "Sampling Distribution of Means"
-hist(xbar, prob = TRUE, xlab = "Sample size = 40", main = main.title, col = "palegoldenrod")
+hist(xbar, prob = TRUE, xlab = "Sample size = 40", main = main.title, col = heat.colors(7))
 abline(v = mean(xbar), col = "purple4", lwd = 3)
 mtext(paste("Sample Mean = ", round(mean(xbar), 3)), col = "navajowhite4")
 lines(density(xbar), col="blue", lwd=2)
@@ -86,3 +86,9 @@ qqnorm(xbar, main = NULL); qqline(xbar)
 ```
 
 The graph shows a majority of the data along the regression line, with minor skewing of the data at both ends equally above the line.  This is an indicator of normally distributed data.
+
+One final test for determining if the distribution is normal is to apply the Shapiro-Wilk test against the sampling distribution:
+```{r shapiro_wilk}
+shapiro.test(xbar)
+```
+

@@ -2,7 +2,7 @@
 title: "Effects of Vitamin C doses on Guinea Pig Tooth Growth An analysis using R"
 author: "Kevin E. D'Elia"
 date: "March 5, 2016"
-output: pdf_document
+output: html_document
 ---
 
 # Synopsis of Analysis
@@ -54,12 +54,14 @@ Tabular descriptive statistics are useful but, as the saying goes, "A picture is
 
 ```{r distribution_graphs, echo=3:8}
 original_par <- par(no.readonly = TRUE)
-par(mfrow=c(2,2))
+par(mfrow=c(1,2))
 growth <- ToothGrowth$len
-hist(growth, prob = TRUE, col = "navajowhite3", border = "black", xlab = "")
+hist(growth, prob = TRUE, col = rainbow(5), border = "black", xlab = "", ylim = c(0.00, 0.05), sub = "Figure 1 - Heights of Tooth Growth",
+     family="mono", font.main=4, font.sub=2, font.lab=2, font.axis=2, cex.main=1.5, cex.sub=.9, cex.lab=.9, cex.axis=.9, col.main="blue", col.sub="grey", col.lab="green", col.axis="orange", fg="red")
 abline(v = mean(growth), col = "green", lwd = 2)
 lines(density(growth), col="blue", lwd=2)
-qqnorm(growth);qqline(growth)
+qqnorm(growth, sub = "",
+     family="mono", font.main=4, font.sub=2, font.lab=2, font.axis=2, cex.main=1.5, cex.sub=.9, cex.lab=.9, cex.axis=.9, col.main="blue", col.sub="grey", col.lab="green", col.axis="orange", fg="red");qqline(growth)
 par(original_par)
 rm(original_par)
 ```
